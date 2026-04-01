@@ -39,7 +39,7 @@ if ($cd) {
 Write-HostLog "Creating Storage Pool named $poolName"
 $pool = Get-StoragePool -ErrorAction SilentlyContinue -FriendlyName $poolName
 if (-not $pool) {
-    New-StoragePool -FriendlyName $poolName -StorageSubSystemFriendlyName '*storage*' -PhysicalDisks (Get-PhysicalDisk -CanPool $True)
+    New-StoragePool -FriendlyName $poolName -StorageSubSystemFriendlyName '*storage*' -PhysicalDisks (Get-PhysicalDisk -CanPool $True | Where-Object {$_.Size -eq 128GB})
     $pool = Get-StoragePool -ErrorAction SilentlyContinue -FriendlyName $poolName
     if ($pool.OperationalStatus -eq 'OK') {
         Write-HostLog "Storage Pool created."
@@ -78,7 +78,7 @@ else {
 Write-HostLog "Formatting Virtual Disk $virtualDiskName"
 $vol = Get-Volume -ErrorAction SilentlyContinue -filesystemlabel $virtualdiskName
 if (-not $vol) {
-    Get-VirtualDisk -FriendlyName $virtualDiskName | Get-Disk | Initialize-Disk -Passthru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -NewFileSystemLabel $virtualDiskName -AllocationUnitSize 4KB -FileSystem NTFS
+    Get-VirtualDisk -FriendlyName $virtualDiskName | Get-Disk | Initialize-Disk -Passthru | New-Partition -DriveLetter E -UseMaximumSize | Format-Volume -NewFileSystemLabel $virtualDiskName -AllocationUnitSize 4KB -FileSystem NTFS
     $vol = Get-Volume -ErrorAction SilentlyContinue -filesystemlabel $virtualdiskName
     if ($vol.filesystem -EQ 'NTFS') {
         Write-HostLog "$virtualDiskName disk volume created."

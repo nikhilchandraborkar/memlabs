@@ -63,7 +63,7 @@
     "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
     "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]",
-    "vmSize": "Standard_E16ds_v5",
+    "vmSize": "Standard_E16ds_v6",
     "addressPrefix": "10.1.0.0/24",
     "subnetPrefix": "10.1.0.0/24",
     "dataDisksCount": 24,
@@ -313,39 +313,7 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
       ]
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat( parameters('virtualMachineName'), '/' , 'AdminCenter' )]",
-      "apiVersion": "2018-10-01",
-      "location": "[variables('location')]",
-      "properties": {
-        "publisher": "Microsoft.AdminCenter",
-        "type": "AdminCenter",
-        "typeHandlerVersion": "0.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "port": "[variables('windowsAdminCenterPort')]",
-          "salt": "[parameters('virtualMachineName')]",
-          "cspFrameAncestors": [
-            "https://*.hosting.portal.azure.net",
-            "https://localhost:1340",
-            "https://ms.portal.azure.com",
-            "https://portal.azure.com",
-            "https://preview.portal.azure.com"
-          ],
-          "corsOrigins": [
-            "https://ms.portal.azure.com",
-            "https://portal.azure.com",
-            "https://preview.portal.azure.com",
-            "https://waconazure.com"
-          ]
-        }
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
-      ]
-    },
+    },    
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
